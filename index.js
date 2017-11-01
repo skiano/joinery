@@ -103,3 +103,8 @@ module.exports = pipe(
   gridToNeighbors,
   createJoinery
 )
+
+
+// B/A A/B BA AB -/A A/- -/B B/- -A A-
+
+
