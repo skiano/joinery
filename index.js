@@ -11,9 +11,6 @@ function pipe () {
   return (input) => fns.reduce((output, fn) => fn(output), input)
 }
 
-// push an item onto array or create the array
-
-
 // add together two 2D points
 const add2D = (a, b) => ([a[0] + b[0], a[1] + b[1]])
 
