@@ -14,8 +14,9 @@ using only the connections available in the template
 For example, the template above could not produce the following:
 
 ```
-  AAA
-  AAA
+AAAA
+AAAA
+AAAA
 ```
 
 Because there is no example of an A ajoining an A in the template
