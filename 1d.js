@@ -17,6 +17,8 @@ const getLinks = (template) => {
     }
   }
 
+  links.push([BLANK, BLANK].join(''))
+
   return links
 }
 
@@ -64,18 +66,22 @@ const createJoinery = (template) => {
   const terminals = getTerminals(links)
   return (size) => ([
     composeRight(terminals, neighborMap, size),
+    composeRight(terminals, neighborMap, size),
+    composeRight(terminals, neighborMap, size),
+    composeRight(terminals, neighborMap, size),
+    composeLeft(terminals, neighborMap, size),
     composeLeft(terminals, neighborMap, size),
     '',
   ].join('\n'))
 }
 
 // const template = 'ABCABAABAC'
-const template = 'ABA'
+const template = 'ABAA'
 // const joint = createJoinery('ABCABABAC')
 
 const joint = createJoinery(template)
 
-console.log('template', template)
+console.log('template', template, '\n')
 console.log(joint(10))
 console.log(joint(15))
 console.log(joint(50))
