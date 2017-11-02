@@ -76,7 +76,7 @@ const createJoinery = (template) => {
 }
 
 // const template = 'ABCABAABAC'
-const template = 'ABAA'
+const template = 'BADAAC'
 // const joint = createJoinery('ABCABABAC')
 
 const joint = createJoinery(template)
