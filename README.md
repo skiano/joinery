@@ -45,3 +45,17 @@ ABA
 BAB
 ```
 
+---
+
+```
+  A     B
+ ABA   BAB
+  A     B
+  
+  
+BA   AB
+A    B
+```
+
+
+
