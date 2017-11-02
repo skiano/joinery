@@ -34,7 +34,7 @@ const getTerminals = links => ({
   right: links.filter(l => l[1] === '-'),
 })
 
-const compose = (terminals, neighborMap, size) => {
+const composeRight = (terminals, neighborMap, size) => {
   const parts = []
 
   for (let i = 0; i < size; i += 1) {
@@ -46,18 +46,39 @@ const compose = (terminals, neighborMap, size) => {
   return parts.reduce((str, p) => str + p[0], '')
 }
 
+const composeLeft = (terminals, neighborMap, size) => {
+  const parts = []
+
+  for (let i = 0; i < size; i += 1) {
+    const prev = parts[i - 1]
+    const options = prev ? neighborMap[prev].left : terminals.right
+    parts.push(randomItem(options))
+  }
+
+  return parts.reduceRight((str, p) => str + p[1], '')
+}
+
 const createJoinery = (template) => {
   const links = getLinks(template)
   const neighborMap = getNeighborMap(links)
   const terminals = getTerminals(links)
-  return (size) => compose(terminals, neighborMap, size)
+  return (size) => ([
+    composeRight(terminals, neighborMap, size),
+    composeLeft(terminals, neighborMap, size),
+    '',
+  ].join('\n'))
 }
 
-const joint = createJoinery('ABCABABAC')
+// const template = 'ABCABAABAC'
+const template = 'ABA'
+// const joint = createJoinery('ABCABABAC')
 
+const joint = createJoinery(template)
+
+console.log('template', template)
 console.log(joint(10))
 console.log(joint(15))
-console.log(joint(20))
+console.log(joint(50))
 console.log(joint(5))
 
 
