@@ -1,84 +1,7 @@
 const Combinatorics = require('js-combinatorics')
+const { sanitizeTemplate, compatibleWithTemplate } = require('./template')
 
 const BLANK = '-'
-
-const template = `
-  CCCCC
-  CABAC
-  CBABC
-  CCCCC
-`
-
-/**
- * @param {string} t - a template string
- * @return {string} a template string with no trailing space on any lines
- */
-const sanitizeTemplate = t => t.trim().replace(/\s+/g, '\n')
-
-/**
- * @param {string} t - a sanatized template string
- * @param {func} onLink - a callback that fires on each link (return true to break loop)
- */
-const scanWarp = (t, onLink = () => {}) => {
-  const w = t.indexOf('\n') + 1
-  const h = (t.length + 1) / w
-
-  let prevIdx = -1
-  let currentIdx
-
-  const handleLink = (link) => {
-    onLink(link || [
-      t.charAt(prevIdx) || BLANK, 
-      t.charAt(currentIdx) || BLANK,
-    ].join(''))
-  }
-
-  /* scan the warp threads */
-  for (let x = 0; x < w - 1; x += 1) {
-    for (let y = 0; y <= h; y += 1) {
-      currentIdx = (y * w) + x
-      if (handleLink()) break
-      prevIdx = currentIdx    
-    }
-  }
-
-  /** process a double blank */
-  handleLink(BLANK + BLANK)
-}
-
-/**
- * @param {string} t - a sanatized template string
- * @param {func} onLink - a callback that fires on each link (return true to break loop)
- */
-const scanWeft = (t, onLink = () => {}) => {
-  console.log(t)
-  const w = t.indexOf('\n') + 1
-  const h = (t.length + 1) / w
-
-  let prevIdx = -1
-  let currentIdx
-
-  const handleLink = (link) => {
-    const l = t.charAt(prevIdx)
-    const r = t.charAt(currentIdx)
-    onLink(link || [
-      (!l || l === '\n') ? BLANK : l,
-      (!r || r === '\n') ? BLANK : r,
-    ].join(''))
-  }
-
-  /* scan the warp threads */
-  for (let y = 0; y < h; y += 1) {
-    for (let x = 0; x < w; x += 1) {
-      currentIdx = (y * w) + x
-      if (handleLink()) break
-      prevIdx = currentIdx
-    }
-  }
-
-  /** process a double blank */
-  handleLink(BLANK + BLANK)
-}
 
 const trimAndSplit = (str, sep = '') => str.trim().split(sep)
 const templateToArray = template => trimAndSplit(template, '\n').map(v => trimAndSplit(v))
@@ -123,9 +46,28 @@ const getThreads = arr2d => ({
 
 
 
-scanWeft(sanitizeTemplate(template), (link) => {
-  console.log(link)
-})
+// scanWeft(sanitizeTemplate(template), (link) => {
+//   console.log(link)
+// })
+
+// scanWarp(sanitizeTemplate(template), (link) => {
+//   console.log(link)
+// })
+
+const template = sanitizeTemplate(`
+  CCCCC
+  CABAC
+  CBABC
+  CCCCC
+`)
+
+const layout = sanitizeTemplate(`
+  CCCC
+  CBAC
+  CCCC
+`)
+
+console.log('is compatible:', compatibleWithTemplate(layout, template))
 
 
 
