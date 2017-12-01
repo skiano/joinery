@@ -12,6 +12,10 @@
 /** represents empty space */
 const BLANK = '-'
 
+const unique = arr => arr.filter((v, i, a) => a.indexOf(v) === i)
+const uniqueChars = str => unique(str.replace(/\s/g,'').split(''))
+const getTemplateUnits = t => uniqueChars(t).concat(BLANK)
+
 /**
  * @param {string} t - a template string
  * @return {string} a template string with no trailing space on any lines
@@ -86,13 +90,19 @@ const scanWeft = (t, onLink = () => {}) => {
 /** store link searches */
 const linkCache = {}
 
+const linksMath = (layoutLink, templateLink, isFinal) => {
+  // until the outer edge allow anything to touch blank space
+  if (!isFinal && layoutLink.includes(BLANK)) return true
+  templateLink === layoutLink
+}
+
 /**
  * @param {string} layout - a sanatized template string
  * @param {string} template - a sanatized template string
  * @return {bool}
  * @description return true if every link in layout exists in template
  */
-const compatibleWithTemplate = (layout, template) => {
+const compatibleWithTemplate = (layout, template, isFinal) => {
   linkCache[template] = linkCache[template] || { warp: {}, weft: {} }
 
   let warpGood = true
@@ -101,19 +111,18 @@ const compatibleWithTemplate = (layout, template) => {
   /** first, scan the warp looking for flaws */
   scanWarp(layout, (layoutLink) => {
     /** check if search is cached */
-    const isCached = linkCache[template].warp.hasOwnProperty(layoutLink)
+    const isCached = isFinal ? false : linkCache[template].warp.hasOwnProperty(layoutLink)
 
     /** search for link in template */
     const isFound = isCached
       ? linkCache[template].warp[layoutLink]
-      : scanWarp(template, (templateLink) => templateLink === layoutLink)
+      : scanWarp(template, templateLink => linksMath(layoutLink, templateLink, isFinal))
 
     /** cache the search result */
     if (!isCached) linkCache[template].warp[layoutLink] = isFound
 
     /** if no matching link, mark as bad, and stop scanning */
     if (!isFound) {
-      console.log(layoutLink)
       warpGood = false
       return true
     }
@@ -125,12 +134,12 @@ const compatibleWithTemplate = (layout, template) => {
   /** then scan the weft, looking for flaws */
   scanWeft(layout, (layoutLink) => {
     /** check if search is cached */
-    const isCached = linkCache[template].weft.hasOwnProperty(layoutLink)
+    const isCached = isFinal ? false : linkCache[template].weft.hasOwnProperty(layoutLink)
 
     /** search for link in template */
     const isFound = isCached
       ? linkCache[template].weft[layoutLink]
-      : scanWeft(template, (templateLink) => templateLink === layoutLink)
+      : scanWeft(template, templateLink => linksMath(layoutLink, templateLink, isFinal))
 
     /** cache the search result */
     if (!isCached) linkCache[template].weft[layoutLink] = isFound
@@ -146,7 +155,33 @@ const compatibleWithTemplate = (layout, template) => {
   return weftGood
 }
 
+const templateFromBlock = (b) =>  {
+  if (b[0].length === 1) return `${b[0]}${b[1]}\n${b[2]}${b[3]}`
+
+  const w = b[0].indexOf('\n')
+  const h = ((b[0].length + 1) / w) - 1
+  const str = []
+
+  let bY
+
+  for (let y = 0; y < w * 2; y += 1) {
+    bY = y % h
+
+    // for each row, add in the rows for the blocks
+    for (let i = 0; i < 4; i += 1) {
+      for (let bX = 0; bX < w; bX += 1) {
+        str.push(b[i].charAt((bY * (w + 1)) + bX))
+      }
+    }
+    str.push('\n')
+  }
+
+  return str.join('')
+}
+
 module.exports = {
   sanitizeTemplate,
-  compatibleWithTemplate 
+  getTemplateUnits,
+  compatibleWithTemplate,
+  templateFromBlock,
 }

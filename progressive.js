@@ -1,7 +1,11 @@
 const Combinatorics = require('js-combinatorics')
-const { sanitizeTemplate, compatibleWithTemplate } = require('./template')
 
-const BLANK = '-'
+const {
+  sanitizeTemplate,
+  getTemplateUnits,
+  compatibleWithTemplate,
+  templateFromBlock
+} = require('./template')
 
 const trimAndSplit = (str, sep = '') => str.trim().split(sep)
 const templateToArray = template => trimAndSplit(template, '\n').map(v => trimAndSplit(v))
@@ -9,22 +13,7 @@ const unique = arr => arr.filter((v, i, a) => a.indexOf(v) === i)
 const uniqueChars = str => unique(str.replace(/\s/g,'').split(''))
 const multiplyArray = (arr, x) => Array.from(new Array(x)).reduce(out => out.concat(arr), [])
 
-const getWeftThreads = (arr2d) => arr2d.map(r => BLANK + r.join('') + BLANK)
-const getWarpThreads = (arr2d) => {
-  const threads = []
-  for (let x = 0; x < arr2d[0].length; x += 1) {
-    threads.push(
-      BLANK + arr2d.map(weft => weft[x]).join('') + BLANK
-    )
-  }
-  return threads
-}
-const getThreads = arr2d => ({
-  warp: getWarpThreads(arr2d),
-  weft: getWeftThreads(arr2d),
-})
-
-// console.log(uniqueChars(template))
+// 
 
 // const fuel = multiplyArray(uniqueChars(template).concat(BLANK), 4) 
 
@@ -61,13 +50,36 @@ const template = sanitizeTemplate(`
   CCCCC
 `)
 
-const layout = sanitizeTemplate(`
-  CCCC
-  CBAC
-  CCCC
-`)
+const getBlocks = (units, multiplier = 1) => {
+  const filler = multiplyArray(units, multiplier)
+  const potentialBlocks = Combinatorics.combination(filler, 4)
+  const validBlocks = []
+  let b
+  while(b = potentialBlocks.next()) {
+    const layout = templateFromBlock(b)
+    if (!validBlocks.includes(layout) && compatibleWithTemplate(layout, template)) {
+      validBlocks.push(layout)
+    }
+  }
+  return validBlocks
+}
 
-console.log('is compatible:', compatibleWithTemplate(layout, template))
+const phase1 = getBlocks(getTemplateUnits(template), 4)
+
+phase1.forEach(b => {
+  console.log(b, '\n')
+})
+
+console.log('--------')
+
+const sample = [
+  '-C\nA-',
+  '-C\nB-',
+  '-A\nB-',
+  'C-\n-C',
+]
+
+console.log(templateFromBlock(sample))
 
 
 
