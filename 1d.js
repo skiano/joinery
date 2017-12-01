@@ -62,21 +62,49 @@ const composeLeft = (terminals, neighborMap, size) => {
 
 const createJoinery = (template) => {
   const links = getLinks(template)
+  console.log('links', links)
   const neighborMap = getNeighborMap(links)
   const terminals = getTerminals(links)
   return (size) => ([
     composeRight(terminals, neighborMap, size),
-    composeRight(terminals, neighborMap, size),
-    composeRight(terminals, neighborMap, size),
-    composeRight(terminals, neighborMap, size),
-    composeLeft(terminals, neighborMap, size),
     composeLeft(terminals, neighborMap, size),
     '',
   ].join('\n'))
 }
 
+// ABC
+
+// -A C-
+// -ABC-
+
+// ---------------------
+// -A-----------------C-
+// -A----------------C-
+// ..--..--..--..--..--
+
+//  A    -   -
+// ABA  -BA -B-
+//  A    A   -
+
+// 01 02 03 04
+// 12 13 14 05
+// 11 16 15 06
+// 10 09 08 07
+
+// 01 02 04 07
+// 03 05 08 11
+// 06 09 12 14
+// 10 13 15 16
+
+// -BAAC---BADAC--BAC-BAC--BAC-BADADAAADAAAAADADADAAC
+// BAC-BAAC-BAC--BAAAC---BAC-BADADAADADADAC-BAC--BAC-
+// corrected
+// -BAAC---BADAC--BAC-BAC--BAC-BADADAAADAAAAADADADAC-
+// -BAAC---BADAC-BAAAC---BAC-BADADAADADADAC-BAC--BAC-
+
 // const template = 'ABCABAABAC'
 const template = 'BADAAC'
+// const template = 'onion'
 // const joint = createJoinery('ABCABABAC')
 
 const joint = createJoinery(template)
