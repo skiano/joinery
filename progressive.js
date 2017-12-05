@@ -59,6 +59,8 @@ const getBlocks = (units, multiplier = 1) => {
     const layout = templateFromBlock(b)
     if (!validBlocks.includes(layout) && compatibleWithTemplate(layout, template)) {
       validBlocks.push(layout)
+    } else {
+      console.log(`--\n${layout}\n`)
     }
   }
   return validBlocks
