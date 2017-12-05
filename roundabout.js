@@ -66,19 +66,23 @@ const fastForEach = (arr, fn) => {
 
 const fastFloor = n => n >>> 0
 
+// important function! consider making package??
 const assembleSquares = (grid) => {
-  const size = grid[0][0].length
-  const assembled = []
+  const assembled   = []
+  const unitsDown   = grid[0].length
+  const unitsAcross = grid[0][0].length
+  const sizeY       = grid[0][0][0].length
+  const sizeX       = grid[0][0][0][0].length
   let y
   let x
-  for (y = 0; y < size * 2; y ++) {
+  for (y = 0; y < sizeY * unitsDown; y ++) {
     assembled.push([])
-    for (x = 0; x < size * 2; x ++) {
+    for (x = 0; x < sizeX * unitsAcross; x ++) {
       assembled[y].push(
-        grid[fastFloor(y / size)]
-            [fastFloor(x / size)]
-            [y % size]
-            [x % size]
+        grid[fastFloor(y / sizeY)]
+            [fastFloor(x / sizeX)]
+            [y % sizeY]
+            [x % sizeX]
       )
     }
   }
@@ -101,31 +105,6 @@ const assembleSquares = (grid) => {
 
   return assembled
 }
-
-const r = g => g.split(' ').map(r => r.split('')) 
-
-const megaSquare = assembleSquares([
-  [ // row 1
-    r('ABCD IJKL QRST YZ12'), // cell 1
-    r('EFGH MNOP UVWX 3456'), // cell 2
-  ],
-  [ // row 2
-    r('abcd ijkl qrst yz98'), // cell 1
-    r('efgh mnop uvwx 7654'), // cell 2
-  ],
-])
-
-// ABCD   EFGH
-// IJKL   MNOP
-// QRST   UVWX
-// YZ12   3456
-
-// abcd   efgh
-// ijkl   mnop
-// qrst   uvwx
-// yz98   7654
-
-logTemplate(megaSquare)
 
 const possible4squares = (units, test, createSquare = v => v) => {
   // TL = TOP LEFT
@@ -167,9 +146,9 @@ const getSquaresFromConfig = ({ keys, map }) => {
   return possible4squares(keys, hasNeighbor)
 }
 
-const getSquaresFromSquares = (squares) => {
-
+const getSquaresFromSquares = (squares, { map }) => {
   const sidesMatch = (a, b, direction) => {
+    console.log(a)
     return true
   }
 
@@ -179,26 +158,52 @@ const getSquaresFromSquares = (squares) => {
 
 // EXAMPLE
 
-// const template = templateConfig(`
-//   HCCCE
-//   DABAD
-//   DBABD
-//   FCCCG
-// `)
+const template = templateConfig(`
+  HCCCE
+  DABAD
+  DBABD
+  FCCCG
+`)
 
-// const squares = getSquaresFromConfig(template)
+const squares = getSquaresFromConfig(template)
 
-// squares.map(logTemplate)
+squares.map(logTemplate)
 // console.log(`${template.keys.length} units => ${squares.length} squares`)
 
-// const superSquares = getSquaresFromSquares(squares)
+// const superSquares = getSquaresFromSquares(squares, template)
 
 // console.log(superSquares.length)
 
 // const superDuperSquares = getSquaresFromSquares(superSquares)
 
+// console.log(superDuperSquares.length)
+
 // logTemplate(superDuperSquares[0])
 
+const a = [
+  ['A', 'B'],
+  ['C', 'D'],
+]
+
+const b = [
+  ['B', 'A'],
+  ['D', 'C'],
+]
+
+console.log(a)
+
+const getEdgeCell = (grid, edge, i) => {
+  const w = grid[0].length
+  const h = grid.length
+  if (edge === TOP) return grid[i]
+  if (edge === LEFT) return h * i
+  if (edge === RIGHT) return (h * i) + w - 1
+  if (edge === BOTTOM) return ((h - 1) * w) + i
+}
+
+console.log(getEdgeCell(b, TOP, 0))
+console.log(getEdgeCell(b, TOP, 1))
+console.log(getEdgeCell(b, TOP, 1))
 
 
 
