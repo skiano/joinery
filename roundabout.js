@@ -62,7 +62,7 @@ const fastForEach = (arr, fn) => {
   }
 }
 
-const possible4squares = (units, test) => {
+const possible4squares = (units, test, createSquare = v => v) => {
   // TL = TOP LEFT
   // TR = TOP RIGHT
   // BR = BOTTOM RIGHT
@@ -84,10 +84,10 @@ const possible4squares = (units, test) => {
 
         // add these to the valid squares
         fastForEach(bottomLefts, (BL) => {
-          validSquares.push([
+          validSquares.push(createSquare([
             [TL, TR],
             [BL, BR],
-          ])
+          ]))
         })
       })
     })
@@ -96,8 +96,16 @@ const possible4squares = (units, test) => {
   return validSquares
 }
 
-const getSquaresFromConfig = ({ keys, map }) => (
-  possible4squares(keys, (a, b, direction) => map[a][direction].includes(b))
+const getSquaresFromConfig = ({ keys, map }) => {
+  // check that a has b as a neighbor in this direction
+  const hasNeighbor = (a, b, direction) => map[a][direction].includes(b)
+  return possible4squares(keys, hasNeighbor)
+}
+
+const getSquaresFromSquares = (squares) => (
+  possible4squares(squares, (a, b, direction) => {
+    console.log(a, b, direction)
+  })
 )
 
 const template = templateConfig(`
@@ -110,7 +118,9 @@ const template = templateConfig(`
 const squares = getSquaresFromConfig(template)
 
 squares.map(logTemplate)
-console.log(squares.length)
+console.log(`${template.keys.length} units => ${squares.length} squares`)
+
+getSquaresFromSquares(squares)
 
 
 
