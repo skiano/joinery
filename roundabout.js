@@ -8,8 +8,10 @@ const BOTTOM = 'BOTTOM'
 const template2D = tem =>
   tem.trim().split('\n').map(r => r.trim().split(''))
 
+const template2string = t2d => t2d.map(r => r.join('')).join('\n')
+
 const logTemplate = (t2d) => {
-  console.log(`${t2d.map(r => r.join('')).join('\n')}\n`)
+  console.log(`${template2string(t2d)}\n`)
 }
 
 const templateConfig = tem => {
@@ -62,6 +64,36 @@ const fastForEach = (arr, fn) => {
   }
 }
 
+const fastFloor = n => n >>> 0
+
+const assembleSquares = (grid) => {
+  const size = grid[0][0].length
+  const assembled = []
+  let y
+  let x
+  for (y = 0; y < size * 2; y ++) {
+    assembled.push([])
+    for (x = 0; x < size * 2; x ++) {
+      const uidx = (fastFloor(y / 2) * size) + fastFloor(x / 2)
+      assembled[y].push(grid[uidx][y % size][x % size])
+    }
+  }
+
+  // const megaSquare = assembleSquares([
+  //   [['A', 'B'], ['E', 'F']],
+  //   [['C', 'D'], ['G', 'H']],
+  //   [['I', 'J'], ['M', 'N']],
+  //   [['K', 'L'], ['O', 'P']],
+  // ])
+  // should be:
+  // ABCD
+  // EFGH
+  // IJKL
+  // MNOP
+
+  return assembled
+}
+
 const possible4squares = (units, test, createSquare = v => v) => {
   // TL = TOP LEFT
   // TR = TOP RIGHT
@@ -108,19 +140,24 @@ const getSquaresFromSquares = (squares) => (
   })
 )
 
-const template = templateConfig(`
-  HCCCE
-  DABAD
-  DBABD
-  FCCCG
-`)
 
-const squares = getSquaresFromConfig(template)
+// EXAMPLE
 
-squares.map(logTemplate)
-console.log(`${template.keys.length} units => ${squares.length} squares`)
+// const template = templateConfig(`
+//   HCCCE
+//   DABAD
+//   DBABD
+//   FCCCG
+// `)
 
-getSquaresFromSquares(squares)
+// const squares = getSquaresFromConfig(template)
+
+// squares.map(logTemplate)
+// console.log(`${template.keys.length} units => ${squares.length} squares`)
+
+// getSquaresFromSquares(squares)
+
+
 
 
 
