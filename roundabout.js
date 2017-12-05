@@ -74,16 +74,24 @@ const assembleSquares = (grid) => {
   for (y = 0; y < size * 2; y ++) {
     assembled.push([])
     for (x = 0; x < size * 2; x ++) {
-      const uidx = (fastFloor(y / 2) * size) + fastFloor(x / 2)
-      assembled[y].push(grid[uidx][y % size][x % size])
+      assembled[y].push(
+        grid[fastFloor(y / size)]
+            [fastFloor(x / size)]
+            [y % size]
+            [x % size]
+      )
     }
   }
 
   // const megaSquare = assembleSquares([
-  //   [['A', 'B'], ['E', 'F']],
-  //   [['C', 'D'], ['G', 'H']],
-  //   [['I', 'J'], ['M', 'N']],
-  //   [['K', 'L'], ['O', 'P']],
+  //   [ // row 1
+  //     [['A', 'B'], ['E', 'F']], // cell 1
+  //     [['C', 'D'], ['G', 'H']], // cell 2
+  //   ],
+  //   [ // row 2
+  //     [['I', 'J'], ['M', 'N']], // cell 1
+  //     [['K', 'L'], ['O', 'P']], // cell 2
+  //   ],
   // ])
   // should be:
   // ABCD
@@ -93,6 +101,31 @@ const assembleSquares = (grid) => {
 
   return assembled
 }
+
+const r = g => g.split(' ').map(r => r.split('')) 
+
+const megaSquare = assembleSquares([
+  [ // row 1
+    r('ABCD IJKL QRST YZ12'), // cell 1
+    r('EFGH MNOP UVWX 3456'), // cell 2
+  ],
+  [ // row 2
+    r('abcd ijkl qrst yz98'), // cell 1
+    r('efgh mnop uvwx 7654'), // cell 2
+  ],
+])
+
+// ABCD   EFGH
+// IJKL   MNOP
+// QRST   UVWX
+// YZ12   3456
+
+// abcd   efgh
+// ijkl   mnop
+// qrst   uvwx
+// yz98   7654
+
+logTemplate(megaSquare)
 
 const possible4squares = (units, test, createSquare = v => v) => {
   // TL = TOP LEFT
@@ -134,11 +167,14 @@ const getSquaresFromConfig = ({ keys, map }) => {
   return possible4squares(keys, hasNeighbor)
 }
 
-const getSquaresFromSquares = (squares) => (
-  possible4squares(squares, (a, b, direction) => {
-    console.log(a, b, direction)
-  })
-)
+const getSquaresFromSquares = (squares) => {
+
+  const sidesMatch = (a, b, direction) => {
+    return true
+  }
+
+  return possible4squares(squares, sidesMatch, assembleSquares)
+}
 
 
 // EXAMPLE
@@ -155,7 +191,13 @@ const getSquaresFromSquares = (squares) => (
 // squares.map(logTemplate)
 // console.log(`${template.keys.length} units => ${squares.length} squares`)
 
-// getSquaresFromSquares(squares)
+// const superSquares = getSquaresFromSquares(squares)
+
+// console.log(superSquares.length)
+
+// const superDuperSquares = getSquaresFromSquares(superSquares)
+
+// logTemplate(superDuperSquares[0])
 
 
 
