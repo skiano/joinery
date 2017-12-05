@@ -1,9 +1,4 @@
-const template = `
-  HCCCE
-  DABAD
-  DBABD
-  FCCCG
-`
+
 
 const TOP = 'TOP'
 const LEFT = 'LEFT'
@@ -13,7 +8,12 @@ const BOTTOM = 'BOTTOM'
 const template2D = tem =>
   tem.trim().split('\n').map(r => r.trim().split(''))
 
-const neighborMap = t2d => {
+const logTemplate = (t2d) => {
+  console.log(`${t2d.map(r => r.join('')).join('\n')}\n`)
+}
+
+const templateConfig = tem => {
+  const t2d = template2D(tem)
   const map = {}
   let row
   let unit
@@ -80,7 +80,7 @@ const possible4squares = (units, test) => {
 
       fastForEach(bottomRights, (BR) => {
         // which BLs can be below this TL and to the left of this BR?
-        const bottomLefts = fastFilter(units, N => test(BR, TL, TOP) && test(BR, N, LEFT))
+        const bottomLefts = fastFilter(units, N => test(N, TL, TOP) && test(BR, N, LEFT))
 
         // add these to the valid squares
         fastForEach(bottomLefts, (BL) => {
@@ -96,10 +96,20 @@ const possible4squares = (units, test) => {
   return validSquares
 }
 
-const { keys, map } = neighborMap(template2D(template))
+const getSquaresFromConfig = ({ keys, map }) => (
+  possible4squares(keys, (a, b, direction) => map[a][direction].includes(b))
+)
 
-const squares = possible4squares(keys, (a, b, direction) => map[a][direction].includes(b))
+const template = templateConfig(`
+  HCCCE
+  DABAD
+  DBABD
+  FCCCG
+`)
 
+const squares = getSquaresFromConfig(template)
+
+squares.map(logTemplate)
 console.log(squares.length)
 
 
