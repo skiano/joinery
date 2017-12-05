@@ -72,15 +72,15 @@ const possible4squares = (units, test) => {
 
   fastForEach(units, (TL) => {
     // which TRs can to the right this TL?
-    const topRights = fastFilter(units, N => test(TL, N, RIGHT))
+    const topRights = fastFilter(units, TR => test(TL, TR, RIGHT))
 
     fastForEach(topRights, (TR) => {
       // which BRs can be below this TR?
-      const bottomRights = fastFilter(units, N => test(TR, N, BOTTOM))
+      const bottomRights = fastFilter(units, BR => test(TR, BR, BOTTOM))
 
       fastForEach(bottomRights, (BR) => {
         // which BLs can be below this TL and to the left of this BR?
-        const bottomLefts = fastFilter(units, N => test(N, TL, TOP) && test(BR, N, LEFT))
+        const bottomLefts = fastFilter(units, BL => test(BL, TL, TOP) && test(BR, BL, LEFT))
 
         // add these to the valid squares
         fastForEach(bottomLefts, (BL) => {
