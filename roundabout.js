@@ -64,49 +64,66 @@ const fastForEach = (arr, fn) => {
   }
 }
 
+// https://bost.ocks.org/mike/shuffle/
+function fastShuffle(array) {
+  var m = array.length, t, i;
+
+  // While there remain elements to shuffle…
+  while (m) {
+
+    // Pick a remaining element…
+    i = Math.floor(Math.random() * m--);
+
+    // And swap it with the current element.
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+  }
+
+  return array;
+}
+
 const fastFloor = n => n >>> 0
 
 // important function! consider making package??
+// TODO: make it accept 4 rectangles (not just squares)
+// const megaSquare = assembleSquares([
+//   [ // row 1
+//     [['A', 'B'], ['E', 'F']], // cell 1
+//     [['C', 'D'], ['G', 'H']], // cell 2
+//   ],
+//   [ // row 2
+//     [['I', 'J'], ['M', 'N']], // cell 1
+//     [['K', 'L'], ['O', 'P']], // cell 2
+//   ],
+// ])
+// should be:
+// ABCD
+// EFGH
+// IJKL
+// MNOP
 const assembleSquares = (grid) => {
-  const assembled   = []
-  const unitsDown   = grid[0].length
-  const unitsAcross = grid[0][0].length
-  const sizeY       = grid[0][0][0].length
-  const sizeX       = grid[0][0][0][0].length
+  const assembled = []
+  const size = grid[0][0].length
   let y
   let x
-  for (y = 0; y < sizeY * unitsDown; y ++) {
+  for (y = 0; y < size * 2; y ++) {
     assembled.push([])
-    for (x = 0; x < sizeX * unitsAcross; x ++) {
+    for (x = 0; x < size * 2; x ++) {
       assembled[y].push(
-        grid[fastFloor(y / sizeY)]
-            [fastFloor(x / sizeX)]
-            [y % sizeY]
-            [x % sizeX]
+        grid[fastFloor(y / size)]
+            [fastFloor(x / size)]
+            [y % size]
+            [x % size]
       )
     }
   }
-
-  // const megaSquare = assembleSquares([
-  //   [ // row 1
-  //     [['A', 'B'], ['E', 'F']], // cell 1
-  //     [['C', 'D'], ['G', 'H']], // cell 2
-  //   ],
-  //   [ // row 2
-  //     [['I', 'J'], ['M', 'N']], // cell 1
-  //     [['K', 'L'], ['O', 'P']], // cell 2
-  //   ],
-  // ])
-  // should be:
-  // ABCD
-  // EFGH
-  // IJKL
-  // MNOP
-
   return assembled
 }
 
 const possible4squares = (units, test, createSquare = v => v) => {
+  units = fastShuffle(units)
+  // units = units.length > 30 ? units.slice(0, 30) : units
   // TL = TOP LEFT
   // TR = TOP RIGHT
   // BR = BOTTOM RIGHT
@@ -140,70 +157,93 @@ const possible4squares = (units, test, createSquare = v => v) => {
   return validSquares
 }
 
+const getEdgeCell = (grid, edge, i) => {
+  if (edge === TOP) return grid[0][i]
+  if (edge === LEFT) return grid[i][0]
+  if (edge === RIGHT) return grid[i][grid[0].length - 1]
+  if (edge === BOTTOM) return grid[grid.length - 1][i]
+}
+
+const opposite = {
+  [TOP]: BOTTOM,
+  [BOTTOM]: TOP,
+  [LEFT]: RIGHT,
+  [RIGHT]: LEFT,
+}
+
+const checkEdges = (a, edge, b, predicate) => {
+  // NOTE: grids assumed to be the same size
+  let size
+  let i
+
+  switch (edge) {
+    case TOP:
+    case BOTTOM:
+      size = a[0][0].length
+    default:
+      size = a.length
+  }
+
+  for (i = 0; i < size; i++) {
+    if (!predicate(
+      getEdgeCell(a, edge, i),
+      getEdgeCell(b, opposite[edge], i),
+      edge,
+    )) {
+      return false
+    }
+  }
+
+  return true
+}
+
 const getSquaresFromConfig = ({ keys, map }) => {
-  // check that a has b as a neighbor in this direction
   const hasNeighbor = (a, b, direction) => map[a][direction].includes(b)
   return possible4squares(keys, hasNeighbor)
 }
 
-const getSquaresFromSquares = (squares, { map }) => {
+const getSquaresFromSquares = (squares, { map }, maxRepeats = 12) => {
+  const connectionCache = {}
+  const hasNeighbor = (a, b, direction) => map[a][direction].includes(b)
   const sidesMatch = (a, b, direction) => {
-    console.log(a)
-    return true
+    const key = [squares.indexOf(a), squares.indexOf(b), direction].join('.')
+    connectionCache[key] = connectionCache.hasOwnProperty(key)
+      ? connectionCache[key] + 1
+      : 0
+    return connectionCache[key] <= maxRepeats && checkEdges(a, direction, b, hasNeighbor)
   }
-
   return possible4squares(squares, sidesMatch, assembleSquares)
 }
-
 
 // EXAMPLE
 
 const template = templateConfig(`
-  HCCCE
-  DABAD
-  DBABD
-  FCCCG
+  AAAA
+  A*AA
+  A|AA
+  A|AA
+  A^AA
+  AAAA
 `)
 
 const squares = getSquaresFromConfig(template)
 
-squares.map(logTemplate)
-// console.log(`${template.keys.length} units => ${squares.length} squares`)
 
-// const superSquares = getSquaresFromSquares(squares, template)
+console.log(`${template.keys.length} units => ${squares.length} squares`)
+
+const superSquares = getSquaresFromSquares(squares, template, 1)
+const superDuperSquares = getSquaresFromSquares(superSquares, template, 1)
+// const superDuperPooperSquares = getSquaresFromSquares(superDuperSquares, template, 1)
+
+
+
+superDuperSquares.map(logTemplate)
 
 // console.log(superSquares.length)
 
-// const superDuperSquares = getSquaresFromSquares(superSquares)
 
-// console.log(superDuperSquares.length)
 
-// logTemplate(superDuperSquares[0])
 
-const a = [
-  ['A', 'B'],
-  ['C', 'D'],
-]
-
-const b = [
-  ['B', 'A'],
-  ['D', 'C'],
-]
-
-console.log(a)
-
-const getEdgeCell = (grid, edge, i) => {
-  const w = grid[0].length
-  const h = grid.length
-  if (edge === TOP) return grid[i]
-  if (edge === LEFT) return h * i
-  if (edge === RIGHT) return (h * i) + w - 1
-  if (edge === BOTTOM) return ((h - 1) * w) + i
-}
-
-console.log(getEdgeCell(b, TOP, 0))
-console.log(getEdgeCell(b, TOP, 1))
-console.log(getEdgeCell(b, TOP, 1))
 
 
 
