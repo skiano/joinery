@@ -138,14 +138,14 @@ function draw(template, w, h) {
 }
 
 const template = templateConfig(`
-  --------
-  -ABABAB-
-  -BABA*A-
-  -ABABAB-
-  --------
+  ..........
+  .|-|-|-|-.
+  .-|-|*|Z|.
+  .|-|-|-|-.
+  ..........
 `)
 
-const t = draw(template, 100, 10)
+const t = draw(template, 100, 50)
 
 logTemplate(t)
 
