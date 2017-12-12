@@ -6,7 +6,7 @@ const BOTTOM = 'BOTTOM'
 const template2D = tem =>
   tem.trim().split('\n').map(r => r.trim().split(''))
 
-const template2string = t2d => t2d.map(r => r.join('')).join('\n')
+const template2string = t2d => t2d.map(r => r.join('')).join('\n').replace(/\./g, ' ')
 
 const logTemplate = (t2d) => {
   console.log(`${template2string(t2d)}\n`)
@@ -138,11 +138,11 @@ function draw(template, w, h) {
 }
 
 const template = templateConfig(`
-  ..........
-  .|-|-|-|-.
-  .-|-|*|Z|.
-  .|-|-|-|-.
-  ..........
+  ............
+  .|-|-|-|-|-.
+  .-|M|-|Z|-|.
+  .|-|-|-|-|-.
+  ............
 `)
 
 const t = draw(template, 100, 50)
