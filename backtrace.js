@@ -63,15 +63,15 @@ function fastShuffle(array) {
 
 
 function draw(template, w, h) {
-  const { map, keys } = template
   const area = w * h
-  const cells = []
+  const { map, keys } = template
 
   const I2X = i => i % w
   const I2Y = i => (i / w) >> 0
   const XY2I = (x, y) => (y * w) + x
 
   const isValid = (str) => {
+    // TODO: special validation for edges
     const i = str.length - 1
     const x = i % w
     const y = (i / w) >> 0
@@ -106,16 +106,13 @@ function draw(template, w, h) {
       }
     }
 
-    console.log('valid keys', valid)
-
     return fastShuffle(valid)
   }
 
-  function solve(node, str = '') {
+  function solve(str = '') {
     if (str.length === area) {
       if (isValid(str)) {
-        cells.push(node)
-        return true
+        return str
       }
     } else {
       const next = getValidNextKeys(str)
@@ -123,41 +120,32 @@ function draw(template, w, h) {
       if (keys.length < 1) return false
 
       for (let i = 0; i < next.length; i++) {
-        if (solve(next[i], str + next[i])) {
-          cells.push(next[i])
-          return true
-        }
+        const potential = solve(str + next[i])
+        if (potential) return potential
       }
-      return false
     }
   }
 
-  solve()
+  const solution = solve()
 
-  if (cells.length === 0) {
+  if (!solution) {
     throw new Error('no solution')
   }
 
-  console.log('solution', cells.reverse().join(''))
-
-  return cells.reverse()
-
-
-  // console.log(node)
-  // if (node === 3) {
-  //   return true
-  // } else {
-  //   for (let i = 0; i < 10; i++) {
-  //     // console.log(backTrace(i))
-  //     // if (backTrace(i)) return true
-  //   }
-  // }
+  const splitter = new RegExp(`.{1,${w}}`, 'g')
+  const grid = solution.match(splitter)
+  return grid.map(r => r.split(''))
 }
 
 const template = templateConfig(`
-  CABAC
-  CBABC
+  --------
+  -ABABAB-
+  -BABA*A-
+  -ABABAB-
+  --------
 `)
 
-draw(template, 10, 10)
+const t = draw(template, 100, 10)
+
+logTemplate(t)
 
