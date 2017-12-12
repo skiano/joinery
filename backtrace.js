@@ -65,14 +65,24 @@ function fastShuffle(array) {
 function draw(template, w, h) {
   const { map, keys } = template
   const area = w * h
-
   const cells = []
-
-  const isValid = (node, str) => true
 
   const I2X = i => i % w
   const I2Y = i => (i / w) >> 0
   const XY2I = (x, y) => (y * w) + x
+
+  const isValid = (str) => {
+    const i = str.length - 1
+    const x = i % w
+    const y = (i / w) >> 0
+    const leftX = x > 0 ? x - 1 : w - 1
+    const aboveY = y > 0 ? y - 1 : h - 1
+    const last = str.charAt(i)
+    const above = str.charAt(XY2I(x, aboveY))
+    const left = str.charAt(XY2I(leftX, y))
+    return map[last][TOP].includes(above) &&
+           map[last][LEFT].includes(left)
+  }
 
   function getValidNextKeys(str) {
     // the next index is simply the length
@@ -80,10 +90,8 @@ function draw(template, w, h) {
     const i = str.length
     const x = i % w
     const y = (i / w) >> 0
-
     const leftX = x > 0 ? x - 1 : w - 1
     const aboveY = y > 0 ? y - 1 : h - 1
-
     const above = str.charAt(XY2I(x, aboveY))
     const left = str.charAt(XY2I(leftX, y))
     const valid = []
@@ -105,8 +113,7 @@ function draw(template, w, h) {
 
   function solve(node, str = '') {
     if (str.length === area) {
-      console.log('validate', str)
-      if (isValid(node, str)) {
+      if (isValid(str)) {
         cells.push(node)
         return true
       }
@@ -130,6 +137,8 @@ function draw(template, w, h) {
   if (cells.length === 0) {
     throw new Error('no solution')
   }
+
+  console.log('solution', cells.reverse().join(''))
 
   return cells.reverse()
 
