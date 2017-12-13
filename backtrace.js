@@ -137,15 +137,65 @@ function draw(template, w, h) {
   return grid.map(r => r.split(''))
 }
 
+// const template = templateConfig(`
+//   ............
+//   .|-|-|-|-|-.
+//   .-|M|-|Z|-|.
+//   .|-|-|-|-|-.
+//   ............
+// `)
+
+// const template = templateConfig(`
+//   /—\\
+//   |+|
+//   |+|
+//   \\—/
+// `)
+
+// const template = templateConfig(`
+//   ┌─┬─┐
+//   │╳├─┤
+//   │╳├╳┤
+//   └—┴—┘
+// `)
+
+// const template = templateConfig(`
+//   ╭╮╭╮╭╮╭╮╭──╮╭──╮
+//   ╰╯││╰╯││╰──╯╰╮╭╯
+//   ╭╮││╭╮││╭──╮╭╯╰╮
+//   ╰╯╰╯╰╯╰╯╰──╯╰──╯
+// `)
+
+// const template = templateConfig(`
+//   ╭╮╭╮╭╮╭──╮╭──╮
+//   ╰╯││╰╯╰──╯╰╮╭╯
+//   ╭╮││╭╮╭──╮╭╯╰╮
+//   ╰╯╰╯╰╯╰──╯╰──╯
+// `)
+
+// const template = templateConfig(`
+//   ┌──┐┌┐┌┐┌───┐┌┐
+//   └──┘├┤├┤└───┘├┤
+//   ┌──┐││├┤┌───┐││
+//   └──┘└┘└┘└───┘└┘
+//   ┌──┐┌┐┌┐┌───┐┌┐
+//   └──┘└┘└┘└───┘└┘
+// `)
+
+// const template = templateConfig(`
+//   ╳╲╱╳╳╱╲╳
+//   ╳╲╱╳╳╲╱╳
+//   ╲╲╱╱╲╲╱╱
+// `)
+
 const template = templateConfig(`
-  ............
-  .|-|-|-|-|-.
-  .-|M|-|Z|-|.
-  .|-|-|-|-|-.
-  ............
+  ╳╲╱╳╱╱╳╲
+  ╳╲╱╳╲╲╳╲
+  ╲╲╱╱╱╱╲╲
 `)
 
-const t = draw(template, 100, 50)
+
+const t = draw(template, 100, 55)
 
 logTemplate(t)
 
