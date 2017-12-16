@@ -35,7 +35,7 @@ const fastFindIdx = (arr, v) => {
   return i
 }
 
-function fillOrder(w, h) {
+function fillOrder(w, h, seedCount = 1) {
   const area = w * h
   const order = new Array(area)
   const filled = {}
@@ -54,7 +54,6 @@ function fillOrder(w, h) {
   }
 
   // start filling anywhere
-  const seedCount = 1
   for (let s = 0; s < seedCount; s++) {
     const seed = rand(0, area)
     if (!order.includes(seed)) {
@@ -103,11 +102,10 @@ function fillOrder(w, h) {
   return order
 }
 
-const w = 125
-const h = 125
-const o = fillOrder(w, h)
-
-console.log(o.length)
+// const w = 125
+// const h = 125
+// const o = fillOrder(w, h)
+// console.log(o.length)
 
 // let filled = []
 // for (let f = 0; f < o.length; f++) {

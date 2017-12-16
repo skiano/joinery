@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>fill</title>
+
+    <style type="text/css">
+      html {
+      }
+      .dot {
+        /*border-radius: 50%;*/
+      }
+
+      #app {
+        position: relative;
+        margin: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <span
+        class="dot"
+        v-for="f, i in fillOrder"
+        :style="{
+          position: 'absolute',
+          width: size + 'px',
+          height: size + 'px',
+          left: ((f % w) * size) + 'px',
+          top: (((f / w) >> 0) * size) + 'px',
+          backgroundColor: 'rgba(30, 0, 0, '+ (i / area) +')'
+        }"
+      ></span>
+    </div>
+
+
+    <script type="text/javascript" src="./fillOrder.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script type="text/javascript">
+      const w = 400
+      const h = 200
+      const order = fillOrder(w, h, rand(1, 15))
+
+      console.log(order)
+
+
+      var app = new Vue({
+        el: '#app',
+        data: {
+          h: h,
+          w: w,
+          area: h * w,
+          size: 3,
+          fillOrder: order
+        }
+      })
+
+    </script>
+  </body>
+</html>
