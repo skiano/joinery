@@ -83,6 +83,6 @@ const template = createTemplate(`
 //   >-.║╱╲╱╲╱║>-.>-.
 // `)
 
-const t = draw(template, 120, 55)
+const t = draw(template, 120, 50)
 
 logTemplate(t)

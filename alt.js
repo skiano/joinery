@@ -107,7 +107,7 @@ const fillOrder = (w, h) => {
 
   const fill = () => {
     // select the next index to fill
-    i = fastShuffle(getNeighbors(randItem(frontier)))[0]
+    i = randItem(getNeighbors(randItem(frontier)))
 
     // use up this index
     order[o] = i
@@ -223,7 +223,7 @@ const template = createTemplate(`
 
 // const t = draw(template, 10, 10)
 
-fillOrder(100,100)
+fillOrder(10,100)
 
 
 // logTemplate(t)
