@@ -54,15 +54,20 @@ function fillOrder(w, h) {
   }
 
   // start filling anywhere
-  const seed = rand(0, area)
-  addToFrontier(seed)
-  order[0] = seed
+  const seedCount = 1
+  for (let s = 0; s < seedCount; s++) {
+    const seed = rand(0, area)
+    if (!order.includes(seed)) {
+      addToFrontier(seed)
+      order.unshift(seed)
+    }
+  }
 
   let i
   let x
   let y
   let n
-  let o = 1
+  let o = seedCount
   while (o < area) {
     // pick a random frontier item
     i = randItem(frontier)
@@ -98,8 +103,8 @@ function fillOrder(w, h) {
   return order
 }
 
-const w = 150
-const h = 150
+const w = 125
+const h = 125
 const o = fillOrder(w, h)
 
 console.log(o.length)
@@ -122,6 +127,7 @@ console.log(o.length)
 //   const splitter = new RegExp(`.{1,${w}}`, 'g')
 //   const grid = str.match(splitter)
 //   console.log(grid.join('\n'))
+//   console.log('-----------------')
 // }
 
 
