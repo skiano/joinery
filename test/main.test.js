@@ -2,6 +2,7 @@ const test = require('tape')
 const {
   stringGrid,
   createTemplate,
+  combineTemplate,
 } = require('../main')
 
 test('basic template', (t) => {
@@ -55,6 +56,59 @@ test('template edges', (t) => {
   t.equal(template.edges.LEFT.sort().join(''), 'AGH', 'edge - left')
   t.equal(template.edges.RIGHT.sort().join(''), 'CDE', 'edge - right')
   t.equal(template.edges.BOTTOM.sort().join(''), 'EFG', 'edge - bottom')
+})
+
+test('combine template', (t) => {
+  t.plan(1)
+
+  const a = {
+    keys: ['A', 'B'],
+    map: {
+      A: { TOP: ['B'], LEFT: ['B'] },
+      B: { TOP: ['A'], LEFT: ['A'] },
+    },
+    edges: {
+      TOP: ['A'],
+      BOTTOM: ['B'],
+    }
+  }
+
+  const b = {
+    keys: ['A', 'B', 'C'],
+    map: {
+      A: { TOP: ['A', 'C'], LEFT: ['A', 'C'] },
+      B: { TOP: ['B', 'C'], LEFT: ['B', 'C'] },
+      C: { TOP: ['A', 'B', 'C'], LEFT: ['A', 'B', 'C'] },
+    },
+    edges: {
+      TOP: ['C'],
+      BOTTOM: ['C'],
+    }
+  }
+
+  const combined = combineTemplate(a, b)
+
+  t.deepEqual(combined, {
+    edges: {
+      TOP: ['A','C'],
+      BOTTOM: ['B','C']
+    },
+    keys: ['A','B','C'],
+    map: {
+      A: {
+        TOP: ['B','A','C'],
+        LEFT: ['B','A','C']
+      },
+      B: {
+        TOP: ['A','B','C'],
+        LEFT: ['A','B','C']
+      },
+      C: {
+        TOP: ['A','B','C'],
+        LEFT: ['A','B','C']
+      }
+    }
+  }, 'combined')
 })
 
 test('string grid', (t) => {
