@@ -24,6 +24,7 @@ const logTemplate = (t2d) => { console.log(`${template2string(t2d)}\n`) }
 const createTemplate = (tem) => {
   const t2d = template2D(tem)
   const map = {}
+  const edges = { [TOP]: [], [RIGHT]: [], [BOTTOM]: [], [LEFT]: [] }
   let row
   let unit
 
@@ -34,19 +35,27 @@ const createTemplate = (tem) => {
     }
   }
 
-  for (let y = 0; y < t2d.length; y += 1) {
+  const h = t2d.length
+  const w = t2d[0].length
+
+  for (let y = 0; y < h; y += 1) {
     row = t2d[y]
-    for (let x = 0; x < row.length; x += 1) {
+    for (let x = 0; x < w; x += 1) {
       unit = t2d[y][x]
       addToUnit(unit, TOP, t2d[y - 1] && t2d[y - 1][x])
       addToUnit(unit, LEFT, t2d[y][x - 1])
       addToUnit(unit, RIGHT, t2d[y][x + 1])
       addToUnit(unit, BOTTOM, t2d[y + 1] && t2d[y + 1][x])
+      if (x === 0 && !edges[LEFT].includes(unit)) edges[LEFT].push(unit)
+      if (x === w - 1 && !edges[RIGHT].includes(unit)) edges[RIGHT].push(unit)
+      if (y === 0 && !edges[TOP].includes(unit)) edges[TOP].push(unit)
+      if (y === h - 1 && !edges[BOTTOM].includes(unit)) edges[BOTTOM].push(unit)
     } 
   }
 
   return {
     map,
+    edges,
     keys: Object.keys(map),
   }
 }

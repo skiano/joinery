@@ -41,6 +41,22 @@ test('basic template', (t) => {
   t.equal(template.map.C.BOTTOM.sort().join(''), 'ABC', 'C - BOTTOM')
 })
 
+test('template edges', (t) => {
+  t.plan(4)
+
+  const template = createTemplate(`
+    ABBC
+    H..D
+    H..D
+    GFFE
+  `)
+
+  t.equal(template.edges.TOP.sort().join(''), 'ABC', 'edge - top')
+  t.equal(template.edges.LEFT.sort().join(''), 'AGH', 'edge - left')
+  t.equal(template.edges.RIGHT.sort().join(''), 'CDE', 'edge - right')
+  t.equal(template.edges.BOTTOM.sort().join(''), 'EFG', 'edge - bottom')
+})
+
 test('string grid', (t) => {
   t.plan(19)
 
