@@ -1,3 +1,5 @@
+const deepmerge = require('deepmerge')
+
 const TOP = 'TOP'
 const LEFT = 'LEFT'
 const RIGHT = 'RIGHT'
@@ -18,21 +20,21 @@ function fastShuffle(array) {
 }
 
 const template2D = tem => tem.trim().split('\n').map(r => r.trim().split(''))
-const template2string = t2d => t2d.map(r => r.join('')).join('\n').replace(/\./g, ' ')
+const template2string = t2d => t2d.map(r => r.join('')).join('\n') // .replace(/\./g, '~')
 const logTemplate = (t2d) => { console.log(`${template2string(t2d)}\n`) }
 const unique = arr => arr.filter((v, i, a) => a.indexOf(v) === i)
 
 const createTemplate = (tem) => {
   const t2d = template2D(tem)
   const map = {}
-  const edges = { [TOP]: [], [RIGHT]: [], [BOTTOM]: [], [LEFT]: [] }
+  const edges = { [TOP]: {}, [RIGHT]: {}, [BOTTOM]: {}, [LEFT]: {} }
   let row
   let unit
 
   const addToUnit = (unit, dir, neighbor) => {
-    if (!map[unit]) map[unit] = { [TOP]: [], [RIGHT]: [], [BOTTOM]: [], [LEFT]: [] }
-    if (neighbor && !map[unit][dir].includes(neighbor)) {
-      map[unit][dir].push(neighbor)
+    if (!map[unit]) map[unit] = { [TOP]: {}, [RIGHT]: {}, [BOTTOM]: {}, [LEFT]: {} }
+    if (neighbor && !map[unit][dir][neighbor]) {
+      map[unit][dir][neighbor] = true // TODO: count here
     }
   }
 
@@ -47,10 +49,10 @@ const createTemplate = (tem) => {
       addToUnit(unit, LEFT, t2d[y][x - 1])
       addToUnit(unit, RIGHT, t2d[y][x + 1])
       addToUnit(unit, BOTTOM, t2d[y + 1] && t2d[y + 1][x])
-      if (x === 0 && !edges[LEFT].includes(unit)) edges[LEFT].push(unit)
-      if (x === w - 1 && !edges[RIGHT].includes(unit)) edges[RIGHT].push(unit)
-      if (y === 0 && !edges[TOP].includes(unit)) edges[TOP].push(unit)
-      if (y === h - 1 && !edges[BOTTOM].includes(unit)) edges[BOTTOM].push(unit)
+      if (x === 0 && !edges[LEFT][unit]) edges[LEFT][unit] = true
+      if (x === w - 1 && !edges[RIGHT][unit]) edges[RIGHT][unit] = true
+      if (y === 0 && !edges[TOP][unit]) edges[TOP][unit] = true
+      if (y === h - 1 && !edges[BOTTOM][unit]) edges[BOTTOM][unit] = true
     } 
   }
 
@@ -61,62 +63,7 @@ const createTemplate = (tem) => {
   }
 }
 
-const combineTemplate = (a, b) => {
-  const newMap = {}
-  const newEdges = {}
-
-  const mixinMap = (map) => {
-    for (let k in map) {
-      if (!newMap[k]) newMap[k] = {}
-      for (let d in map[k]) {
-        if (!newMap[k][d]) newMap[k][d] = []
-        map[k][d].forEach(v => {
-          if (!newMap[k][d].includes(v)) newMap[k][d].push(v)
-        })
-      }
-    }
-  }
-
-  const mixinEdges = (edges) => {
-    for (let e in edges) {
-      if (!newEdges[e]) newEdges[e] = []
-      edges[e].forEach(v => {
-        if (!newEdges[e].includes(v)) newEdges[e].push(v)
-      })
-    }
-  }
-
-  mixinMap(a.map)
-  mixinMap(b.map)
-  mixinEdges(a.edges)
-  mixinEdges(b.edges)
-
-  return {
-    edges: newEdges,
-    keys: unique([].concat(a.keys, b.keys)),
-    map: newMap,
-  }
-}
-
-const stringGrid = (w) => {
-  const point2Index = ([x, y]) => (y * w) + x
-  const index2Point = (i) => ([(i % w), (i / w) >> 0])
-  const translatePoint = ([x, y], [deltaX, deltaY]) => [x + deltaX, y + deltaY]
-  const translateIndex = (i, translation) => {
-    const nextPoint = translatePoint(index2Point(i), translation)
-    if (nextPoint[0] > w - 1 || nextPoint[0] < 0) return
-    const nextIndex = point2Index(translatePoint(index2Point(i), translation))
-    if (nextIndex < 0) return
-    return nextIndex
-  }
-
-  return {
-    point2Index,
-    index2Point,
-    translatePoint,
-    translateIndex,
-  }
-}
+const combineTemplates = (a, b) => Array.isArray(a) ? deepmerge.all(a) : deepmerge(a, b)
 
 function draw(template, w, h) {
   const area = w * h
@@ -141,12 +88,12 @@ function draw(template, w, h) {
     for (let k = 0; k < keys.length; k++) {
       const key = keys[k]
       if (
-        (!above || map[above][BOTTOM].includes(key)) &&
-        (!left || map[left][RIGHT].includes(key)) &&
-        (x !== 0 || edges[LEFT].includes(key)) &&
-        (y !== 0|| edges[TOP].includes(key)) &&
-        (x !== w - 1|| edges[RIGHT].includes(key)) &&
-        (y !== h - 1|| edges[BOTTOM].includes(key))
+        (!above || map[above][BOTTOM][key]) &&
+        (!left || map[left][RIGHT][key]) &&
+        (x !== 0 || edges[LEFT][key]) &&
+        (y !== 0|| edges[TOP][key]) &&
+        (x !== w - 1|| edges[RIGHT][key]) &&
+        (y !== h - 1|| edges[BOTTOM][key])
       ) {
         valid.push(key)
       }
@@ -155,7 +102,16 @@ function draw(template, w, h) {
     return fastShuffle(valid)
   }
 
+  let tries = 0
+
   function solve(str = '') {
+    tries += 1
+
+    if (tries > 1000000) {
+      console.log('1 million tries')
+      tries = 0
+    }
+
     if (str.length === area) {
       return str
     } else {
@@ -182,9 +138,8 @@ function draw(template, w, h) {
 }
 
 module.exports = {
-  stringGrid,
   createTemplate,
-  combineTemplate,
+  combineTemplates,
   logTemplate,
   draw,
 }
