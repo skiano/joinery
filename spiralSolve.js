@@ -1,13 +1,3 @@
-
-// create path / ranks / files
-
-const createNode = (data) => {
-  const node = { data }
-  return node
-}
-
-// ranks / files / knars / elifs 
-
 const createList = () => {
   const list = {
     head: null,
@@ -15,8 +5,8 @@ const createList = () => {
     length: 0,
   }
 
-  list.push = (v) => {
-    const node = createNode(v)
+  list.push = (data) => {
+    const node = { data }
     if (list.head) {
       list.head.next = node
       node.prev = list.head
@@ -40,46 +30,59 @@ const createList = () => {
     list.length -= 1
   }
 
+  list.each = (fn) => {
+    let i = list.tail
+    while (i = i.next) fn(i.data)
+  }
+
   return list
 }
 
-const fill = (w, h, rule) => {
-
-  list = createList()
-
-
+const fill = (w, h, rule, onPop = () => {}) => {
   console.log(`fill a ${w}x${h} grid using ${rule.name}`)
 
+  // create the empty fill
+  list = createList()
 
-  const getNextNode = (idx) => ({ idx: 2, values: ['B', 'C', 'A'] })
+  // seed it with an intial value
+  list.push(rule(undefined, list.length))
+  list.head.data.value = list.head.data.values.pop()
 
-  list.push(rule(list.head, list.length))
-
+  // define a way to proceed
   const next = () => {
+    // uh oh, we have run out of posibilities
     if (!list.head) { throw new Error('No solution!') }
-    const value = list.head.data.values.pop()
-    const idx = list.head.data.idx
-    if (value) {
-      console.log(`add: ${'\t'.repeat(list.length) + value}`)
-      list.push(rule(list.head, list.length))
+
+    // take the current possibility
+    list.head.data.value = list.head.data.values.pop()
+
+    // if it exists, search for the next node
+    // else, backtrace
+    if (list.head.data.value) {
+      console.log(`add: ${'--'.repeat(list.length) + list.head.data.idx + ':' + list.head.data.value}`)
+      list.push(rule(list.head.data, list.length))
     } else {
-      // console.log(`back trace`)
+      onPop(list.head.data)
       list.pop()
     }
   }
 
-  for (let c = 0; c < 6600; c++) {
-    next()
-  }
+  // search until filled, or until max is exceeded
+  let max = 100
+  while (max-- && list.length < w * h) next()
+
+  console.log(list.length)
+  list.each(i => console.log(i))
 }
 
-fill(2, 2, function spiralFill(currentNode, length) {
-  // console.log('current length', length)
 
-  if (length > 6) {
-    return { idx: 2, values: [] }
-  }
+fill(20, 20, function spiralFill(currentNode, length) {
 
-  return { idx: 2, values: [`B${length}`, `A${length}`] }
+  const nextIdx = currentNode ? currentNode.idx + 1 : 0
+
+  if (length > 6) return { idx: nextIdx, values: [] }
+  return { idx: nextIdx, values: [`B${length}`, `A${length}`] }
+}, (popped) => {
+  console.log('popping off', popped.idx)
 })
 
