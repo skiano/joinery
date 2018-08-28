@@ -28,7 +28,7 @@ const createList = () => {
 
   list.each = (fn) => {
     let i = list.tail
-    do { fn(i.data) } while (i = i.next)
+    while (i = i.next) fn(i.data)
   }
 
   return list
@@ -58,7 +58,7 @@ const fill = (w, h, rule, onPop = () => {}) => {
 
       const items = []
       list.each(v => items.push(v.value))
-      // console.log(items.join('.'))
+      console.log(items.join('.'))
 
       // console.log(`add: ${'--'.repeat(list.length) + list.head.data.idx + ':' + list.head.data.value}`)
       list.push(rule(list.head.data, list.length))
@@ -78,66 +78,11 @@ const fill = (w, h, rule, onPop = () => {}) => {
 }
 
 
-const spiralFill = (w, h) => {
-
-  // a map where keys are visited indexes
-  const visited = {}
-  const translations = [1, w, -1, -w]
-
-  const nextNode = (currentNode, length) => {
-
-    // return the initial node
-    if (!currentNode) {
-      // mark the visited
-      visited[nextIdx] = currentNode.value
-      return { idx: 0, direction: 0, values: ['a', 'b', 'c'] }
-    }
-
-    // what are the current x and y
-    const x = currentNode.idx % w
-    const y = (currentNode.idx / w) >> 0
-
-    // what is next if there is no turning
-    let nextIdx = currentNode.idx + translations[currentNode.direction]
-    let nextDir = currentNode.direction
-
-    // should this turn?
-    if (
-      visited[nextIdx] ||
-      (nextDir === 2 && x === 0) ||
-      (nextDir === 3 && y === 0) ||
-      (nextDir === 0 && x === w - 1) ||
-      (nextDir === 1 && y === h - 1)
-    ) {
-      // handle the turn
-      nextDir = nextDir < 3 ? nextDir + 1 : 0
-      nextIdx = currentNode.idx + translations[nextDir]
-    }
-
-    // mark the visited
-    visited[nextIdx] = true
-
-    // compute the next possible values
-    const nextValues = ['a', 'b', 'c']
-
-    // return the next node
-    return {
-      idx: nextIdx,
-      direction: nextDir,
-      values: ['a', 'b', 'c'],
-    }
-  }
-
-  const onBacktrace = (popped) => {
-    // when backtracing
-    // the currently visited link must
-    // be deleted so that it can be refilled
-    delete visited[popped.idx]
-  }
-
-  fill(w, h, nextNode, onBacktrace)
-
-}
-
-spiralFill(4, 4)
+fill(20, 20, function spiralFill(currentNode, length) {
+  const nextIdx = currentNode ? currentNode.idx + 1 : 0
+  if (length > 6) return { idx: nextIdx, values: [] }
+  return { idx: nextIdx, values: [`B${length}`, `A${length}`] }
+}, (popped) => {
+  console.log('popping off', popped.idx)
+})
 
