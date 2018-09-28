@@ -6,6 +6,18 @@ const {
 } = require('./main')
 
 // const template = createTemplate(`
+//   A--
+//   -A-
+// `)
+
+// const template = createTemplate(`
+//   ╭──╮╭╮╭╮╭╮╭──╮╭──╮
+//   ╰╮╭╯╰╯││╰╯╰──╯╰╮╭╯
+//   ╭╯╰╮╭╮││╭╮╭──╮╭╯╰╮
+//   ╰──╯╰╯╰╯╰╯╰──╯╰──╯
+// `)
+
+// const template = createTemplate(`
 //   ............
 //   .|-|-|-|-|-.
 //   .-|M|-|Z|-|.
@@ -27,30 +39,30 @@ const {
 //   └—┴—┘
 // `)
 
-const a = createTemplate(`
-  ......
-  .┌┐┌┐.
-  .└┘││.
-  .┌┐││.
-  .└┘└┘.
-  ......
-`)
+// const a = createTemplate(`
+//   ......
+//   .┌┐┌┐.
+//   .└┘││.
+//   .┌┐││.
+//   .└┘└┘.
+//   ......
+// `)
 
-const b = createTemplate(`
-  ......
-  .┌┐┌┐.
-  .││└┘.
-  .││┌┐.
-  .└┘└┘.
-  ......
-`)
+// const b = createTemplate(`
+//   ......
+//   .┌┐┌┐.
+//   .││└┘.
+//   .││┌┐.
+//   .└┘└┘.
+//   ......
+// `)
 
-const c = createTemplate(`
-  ......
-  .┌──┐.
-  .└──┘.
-  ......
-`)
+// const c = createTemplate(`
+//   ......
+//   .┌──┐.
+//   .└──┘.
+//   ......
+// `)
 
 // const spacers = combineTemplates(a, b)
 // const moreSpace = combineTemplates(spacers, c)
@@ -138,16 +150,16 @@ const c = createTemplate(`
 //   ╚═══╝╰───╯╰──╯╰──╯
 // `)
 
-// const template = createTemplate(`
-//   ╭──╮╔══╗
-//   │╔╗│║╭╮║
-//   │╚╝│║╰╯║
-//   ╰──╯╚══╝
-//   ╔══╗╭──╮
-//   ║╔╗║│╭╮│
-//   ║╚╝║│╰╯│
-//   ╚══╝╰──╯
-// `)
+const template = createTemplate(`
+  ╭──╮╔══╗
+  │╔╗│║╭╮║
+  │╚╝│║╰╯║
+  ╰──╯╚══╝
+  ╔══╗╭──╮
+  ║╔╗║│╭╮│
+  ║╚╝║│╰╯│
+  ╚══╝╰──╯
+`)
 
 // const template = createTemplate(`
 //   ╭──╮╔══╗╔══╗
@@ -420,20 +432,21 @@ const c = createTemplate(`
 //   └─┘.└─┘.└─┘.└┴┘.└─┘.└─┘.└─┘.└─┘
 // `)
 
-const template = createTemplate(`
-  ┌─┐.┌┬┐.┌─┐.┌┬┐
-  ├┐│.│││.│.│.│└┤
-  │└┤.├┘│.│.│.│.│
-  │.│.├─┤.│.│.│.│
-  │┌┼┐│.│.│.│.│.│
-  │││││.│.│.│.│.│
-  │││││.│.│.│.│.│
-  │└┼┘│.│.│.│.│.│
-  │.│.│┌┼┐│.│.│.│
-  │.│┌┼┘│└┼┐│.├┐│
-  │┌┼┘│.│.│└┤.│││
-  └┴┘.└─┘.└─┘.└┴┘
-`)
+// const template = createTemplate(`
+//   ┌─┐.┌┬┐.┌─┐.┌┬┐
+//   ├┐│.│││.│.│.│└┤
+//   │└┤.├┘│.│.│.│.│
+//   │.│.├─┤.│.│.│.│
+//   │┌┼┐│.│.│.│.│.│
+//   │││││.│.│.│.│.│
+//   │││││.│.│.│.│.│
+//   │└┼┘│.│.│.│.│.│
+//   │.│.│┌┼┐│.│.│.│
+//   │.│┌┼┘│└┼┐│.├┐│
+//   │┌┼┘│.│.│└┤.│││
+//   └┴┘.└─┘.└─┘.└┴┘
+// `)
+// ^^^^^^ really neat figure ground effects! ^^^^^^^^
 
 // const template = createTemplate(`
 //   ┌─┐.┌┬┐.┌─┐
@@ -450,6 +463,64 @@ const template = createTemplate(`
 //   └┴┘.└┴┘.└─┘
 // `)
 
+// const template = createTemplate(`
+//   // something based on thermometers!
+// `)
+
+// const template = createTemplate(`
+//   ●●●●──┐●●●┌●┐
+//   ││└┐┌─┘│││└●│
+//   ││┌┘└─┐●│└──●
+//   ││└┐┌─┘││││││
+//   ●●●┘└●●●●●●●●
+// `)
+
+// const template = createTemplate(`
+//   ◒│◒│◒◑══│◒│
+//   ║│║│║──◐│║│
+//   ║◓║◓║◑═══╝◓
+// `)
+
+// const template = createTemplate(`
+//   ▲△
+//   △▲
+// `)
+
+// http://jrgraphix.net/r/Unicode/2580-259F
+// const template = createTemplate(`
+//   ▓▒░░
+//   ░▓▒▒
+//   ▓▒░░
+// `)
+
+// const template = createTemplate(`
+//   ▚▞
+//   ▞▚
+// `)
+
+// const template = createTemplate(`
+//   ▞▞▞▞▞▞▞▞
+//   ▚▞▜▙▚▙▚▚
+//   ▞▚▜▙▞▞▞▚
+//   ▞▞▞▞▞▞▞▞
+// `)
+
+// const template = createTemplate(`
+//   ◢◣◤◥
+//   ◤◥◢◣
+// `)
+
+// const template = createTemplate(`
+//   ◢◣◤◥◣◤
+//   ◤◥◢◣◢◤
+//   ◢◤◥◣◤◥
+//   ◤◤◥◥◤◤
+// `)
+
+// const template = createTemplate(`
+//   →←←→→
+//   →←←→→
+// `)
 
 // const template = combineTemplates([
 //   createTemplate(`
@@ -554,8 +625,13 @@ const template = createTemplate(`
 //   ╲╱╲╲╱╲╱╱╲
 // `)
 
+// const template = createTemplate(`
+//   A-A
+//   -AA
+// `)
+
 const final = combineTemplates([template])
 
-const t = draw(final, 15, 15)
+const t = draw(final, 20, 20)
 
 logTemplate(t)
