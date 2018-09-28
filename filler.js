@@ -1,4 +1,7 @@
 const createList = () => {
+  const next = 'next'
+  const prev = 'prev'
+
   let length = 0
   let head
   let tail
@@ -19,8 +22,8 @@ const createList = () => {
       const node = { v: value }
 
       if (tail) {
-        tail.next = node
-        node.prev = tail
+        tail[next] = node
+        node[prev] = tail
       }
 
       if (!head) {
@@ -34,17 +37,17 @@ const createList = () => {
       n = n || tail
 
       if (length && n) {
-        const l = n.prev
-        const r = n.next
+        const l = n[prev]
+        const r = n[next]
 
         if (l) {
-          l.next = r
+          l[next] = r
         } else {
           head = r
         }
 
         if (r) {
-          r.prev = l
+          r[prev] = l
         } else {
           tail = l
         }
@@ -62,13 +65,13 @@ const createList = () => {
       let n = head
       while (n) {
         if (predicate(n)) return n
-        n = n.next
+        n = n[next]
       }
     },
     findIdx(idx) {
       let n = head
       while (n && idx--) {
-        n = n.next
+        n = n[next]
       }
       return n
     },
