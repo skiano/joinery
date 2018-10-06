@@ -20,10 +20,13 @@ function createNodes(template) {
     nodes[p] = {
       color: flat[p],
       index: () => p,
-      north: () => nodes[p - width],
-      south: () => nodes[p + width],
-      east:  () => p + 1 < width ? nodes[p + 1] : undefined,
-      west:  () => x > 0 ? nodes[p - 1] : undefined
+      next: () => nodes[p + 1],
+      move: {
+        north: () => nodes[p - width],
+        south: () => nodes[p + width],
+        east:  () => p + 1 < width ? nodes[p + 1] : undefined,
+        west:  () => x > 0 ? nodes[p - 1] : undefined
+      }
     }
   }
 
@@ -40,31 +43,32 @@ function createNodes(template) {
   return nodes;
 }
 
-function floodFill(node, targetColor, replacementColor, nodes) {
+function floodFill(nodes, targetColor, replacementColor, maxIterations = Infinity) {
   if (targetColor === replacementColor) return;
-  if (node.color !== targetColor) return;
 
-  const directions = 'south0east0north0west'.split(0);
+  let node = nodes[0];
+  while (node.color !== targetColor) {
+    node = node.next();
+  }
 
-  let maxI = 3000;
+  if (!node) return;
 
   const q = createQueue();
 
   node.color = replacementColor;
   q.add(node);
 
-  while (q.length() && maxI--) {
+  while (q.length() && Infinity--) {
     const n = q.remove();
 
-    directions.forEach((d) => {
-      const neighbor = n[d]();
+    let neighbor;
+    for (let d in n.move) {
+      neighbor = n.move[d]();
       if (neighbor && (neighbor.color === targetColor)) {
         neighbor.color = replacementColor;
         q.add(neighbor);
       }
-    });
-
-    console.log(nodes.toString(), '\n');
+    }
   }
 
   return;
@@ -72,10 +76,10 @@ function floodFill(node, targetColor, replacementColor, nodes) {
 
 
 const nodes = createNodes(`
-  ...........................
+  XXX........................
   ..X..X.....X..X.....X..X...
-  ...........................
-  ..X..X....XXxxXx....X..X...
+  xxX.x......................
+  ..Xx.X....XXxxXx....X..X...
   ......xxxx.....x...........
   ......x........x...........
   ......xxxxxxxxxx...........
@@ -83,9 +87,9 @@ const nodes = createNodes(`
   ...........................
 `);
 
-floodFill(nodes[12], '.', '+', nodes);
+floodFill(nodes, '.', '+', nodes);
 
-// console.log(nodes.toString());
+console.log(nodes.toString());
 
 
 // const q = createQueue();
