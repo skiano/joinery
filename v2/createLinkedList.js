@@ -1,4 +1,4 @@
-function createList() {
+module.exports = function createLinkedList() {
   const next = 'next'
   const prev = 'prev'
 
@@ -74,52 +74,15 @@ function createList() {
         }
       }
       return node;
+    },
+    toArray: function() {
+      const arr = [];
+      let node = head;
+      while (node) {
+        arr.push(node.value);
+        node = node[next];
+      }
+      return arr;
     }
   }
-}
-
-const list = createList()
-
-list.add(0)
-list.add(1)
-list.add(2)
-list.add(3)
-list.add(4)
-list.add(5)
-
-list.toArray = () => {
-  arr = []
-  list.walk((n) => {
-    arr.push(n.value)
-  })
-  return arr
-}
-
-// console.log(list.toArray())
-
-// list.walk(console.log.bind(console), list.findIdx(3))
-
-console.log(list.length())
-console.log(list.find(1))
-list.remove(list.find(1))
-console.log(list.length())
-// //
-console.log(list.toArray())
-//
-list.remove()
-//
-console.log(list.toArray())
-//
-list.remove()
-//
-console.log(list.toArray())
-//
-list.remove()
-list.remove()
-list.remove()
-list.remove()
-list.remove()
-
-console.log(list.toArray())
-
-console.log(+1 > 0)
+};
