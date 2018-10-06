@@ -20,7 +20,7 @@ function fastShuffle(array) {
 }
 
 const template2D = tem => tem.trim().split('\n').map(r => r.trim().split(''))
-const template2string = t2d => t2d.map(r => r.join('')).join('\n') // .replace(/\./g, '~')
+const template2string = t2d => t2d.map(r => r.join('')).join('\n').replace(/\./g, ' ')
 const logTemplate = (t2d) => { console.log(`${template2string(t2d)}\n`) }
 const unique = arr => arr.filter((v, i, a) => a.indexOf(v) === i)
 
@@ -53,7 +53,7 @@ const createTemplate = (tem) => {
       if (x === w - 1 && !edges[RIGHT][unit]) edges[RIGHT][unit] = true
       if (y === 0 && !edges[TOP][unit]) edges[TOP][unit] = true
       if (y === h - 1 && !edges[BOTTOM][unit]) edges[BOTTOM][unit] = true
-    } 
+    }
   }
 
   return {
@@ -143,4 +143,3 @@ module.exports = {
   logTemplate,
   draw,
 }
-
