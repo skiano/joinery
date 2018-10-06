@@ -47,16 +47,14 @@ module.exports = function createLinkedList() {
         length -= 1;
       }
     },
-    walk: function(cb, start) {
-      let node = start || head;
-      while (node) {
+    walk: function(cb, node = head, count = Infinity) {
+      while (node && count--) {
         cb(node);
         node = node[next];
       }
     },
-    walkBack: function(cb, start) {
-      let node = start || tail;
-      while (node) {
+    walkBack: function(cb, node = tail, count = Infinity) {
+      while (node && count--) {
         cb(node);
         node = node[prev];
       }
