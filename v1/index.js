@@ -3,7 +3,7 @@ const {
   createTemplate,
   combineTemplates,
   logTemplate
-} = require('./main')
+} = require('./joinery')
 
 // const template = createTemplate(`
 //   A--

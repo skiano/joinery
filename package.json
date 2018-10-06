@@ -2,12 +2,8 @@
   "name": "joinery",
   "version": "1.0.0",
   "description": "build fields based on pattern units",
-  "main": "main.js",
-  "scripts": {
-    "test": "tape test/**/*.js | tap-spec",
-    "test:watch": "nodemon -q -x 'npm test'",
-    "dev": "nodemon draw.js"
-  },
+  "main": "v1/index.js",
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/skiano/joinery.git"
@@ -19,8 +15,6 @@
   },
   "homepage": "https://github.com/skiano/joinery#readme",
   "devDependencies": {
-    "deepmerge": "^2.0.1",
-    "tap-spec": "^4.1.1",
-    "tape": "^4.8.0"
+    "deepmerge": "^2.0.1"
   }
 }
