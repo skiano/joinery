@@ -1,4 +1,4 @@
-module.exports = function createLinkedList() {
+module.exports = function createLinkedList(size) {
   const next = 'next'
   const prev = 'prev'
 
@@ -24,6 +24,10 @@ module.exports = function createLinkedList() {
 
       tail = node;
       length += 1;
+
+      if (size && length > size) {
+        throw new Error(`maximum size of ${size} exceeded`);
+      }
     },
     remove: (n) => {
       const node = n || tail;

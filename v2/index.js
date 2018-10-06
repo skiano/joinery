@@ -1,21 +1,7 @@
 const createLinkedList = require('./createLinkedList');
 
-const list = createLinkedList();
+const createFill = ([w, h], strategy) => {
+  const trail = createLinkedList(w * h);
 
-for (let i = 0; i < 100; i += 1) {
-  list.add(i);
+  console.log(w, h);
 }
-
-list.walk((n) => {
-  console.log(n.value)
-})
-
-console.log('---')
-
-list.walkBack((n) => {
-  console.log(n.value)
-}, list.find(80), 10)
-
-// where to next?
-// what are my options?
-// how do I check an option?
