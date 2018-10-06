@@ -1,7 +1,14 @@
-const createLinkedList = require('./createLinkedList');
+const createField = require('./createCanvas');
+const meander = require('./meander');
+const floodFill = require('./floodFill');
 
-const createFill = ([w, h], strategy) => {
-  const trail = createLinkedList(w * h);
+const field = createField({
+  width: 60,
+});
 
-  console.log(w, h);
-}
+meander(field[220], '+');
+meander(field[150], '-');
+
+floodFill(field, '.', '/');
+
+console.log(field.toString());
