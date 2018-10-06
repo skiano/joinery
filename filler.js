@@ -1,80 +1,79 @@
 function createList() {
-  var next = 'prev'
-    , prev = 'next'
-    , length = 0
-    , head
-    , tail
-    , arr
-    , n;
+  const next = 'next'
+  const prev = 'prev'
+
+  let length = 0
+  let head
+  let tail
 
   return {
-    length: function() { return length; },
-    head: function() { return head; },
-    tail: function() { return tail; },
-    add: function(value) {
-      n = { v: value };
+    head: () => head,
+    tail: () => tail,
+    length: () => length,
+    add: (value) => {
+      const node = { value };
 
       if (tail) {
-        tail[next] = n;
-        n[prev] = tail;
+        tail[next] = node;
+        node[prev] = tail;
       }
 
       if (!head) {
-        head = n;
+        head = node;
       }
 
-      tail = n;
+      tail = node;
       length += 1;
     },
-    remove: function(node) {
-      n = node || tail;
+    remove: (n) => {
+      const node = n || tail;
 
-      if (length && n) {
-        const l = n[prev];
-        const r = n[next];
+      if (length && node) {
+        const before = node[prev];
+        const after = node[next];
 
-        if (l) {
-          l[next] = r;
+        if (before) {
+          before[next] = after;
         } else {
-          head = r;
+          head = after;
         }
 
-        if (r) {
-          r[prev] = l;
+        if (after) {
+          after[prev] = before;
         } else {
-          tail = l;
+          tail = before;
         }
 
         length -= 1;
       }
     },
     walk: function(cb, start) {
-      n = start || head;
-      while (n) {
-        cb(n);
-        n = n[next];
+      let node = start || head;
+      while (node) {
+        cb(node);
+        node = node[next];
       }
     },
     walkBack: function(cb, start) {
-      n = start || tail;
-      while (n) {
-        cb(n);
-        n = n[prev];
+      let node = start || tail;
+      while (node) {
+        cb(node);
+        node = node[prev];
       }
     },
     find: function(predicate) {
-      n = head;
-      if (+predicate < 0) {
-        while (n) {
-          if (predicate(n)) return n;
-          n = n[next];
+      let node = head;
+      if (typeof predicate === 'function') {
+        while (node) {
+          if (predicate(node)) return node;
+          node = node[next];
         }
       } else {
-        while (n && predicate--) {
-          n = n[next];
+        while (node && predicate--) {
+          node = node[next];
         }
       }
-      return n;
+      return node;
     }
   }
 }
@@ -91,7 +90,7 @@ list.add(5)
 list.toArray = () => {
   arr = []
   list.walk((n) => {
-    arr.push(n.v)
+    arr.push(n.value)
   })
   return arr
 }
