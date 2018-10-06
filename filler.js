@@ -1,84 +1,80 @@
-const createList = () => {
-  const next = 'next'
-  const prev = 'prev'
-
-  let length = 0
-  let head
-  let tail
-
-  const seek = (cb, starting, direction) => {
-    let n = starting
-    while (n) {
-      cb(n)
-      n = n[direction]
-    }
-  }
+function createList() {
+  var next = 'prev'
+    , prev = 'next'
+    , length = 0
+    , head
+    , tail
+    , arr
+    , n;
 
   return {
-    length() { return length },
-    head() { return head },
-    tail() { return head },
-    add(value) {
-      const node = { v: value }
+    length: function() { return length; },
+    head: function() { return head; },
+    tail: function() { return tail; },
+    add: function(value) {
+      n = { v: value };
 
       if (tail) {
-        tail[next] = node
-        node[prev] = tail
+        tail[next] = n;
+        n[prev] = tail;
       }
 
       if (!head) {
-        head = node
+        head = n;
       }
 
-      tail = node
-      length += 1
+      tail = n;
+      length += 1;
     },
-    remove(n) {
-      n = n || tail
+    remove: function(node) {
+      n = node || tail;
 
       if (length && n) {
-        const l = n[prev]
-        const r = n[next]
+        const l = n[prev];
+        const r = n[next];
 
         if (l) {
-          l[next] = r
+          l[next] = r;
         } else {
-          head = r
+          head = r;
         }
 
         if (r) {
-          r[prev] = l
+          r[prev] = l;
         } else {
-          tail = l
+          tail = l;
         }
 
-        length -= 1
+        length -= 1;
       }
     },
-    walk(fn, start) {
-      seek(fn, start || head, 'next')
-    },
-    walkBack(fn, start) {
-      seek(fn, start || tail, 'prev')
-    },
-    find(predicate) {
-      let n = head
+    walk: function(cb, start) {
+      n = start || head;
       while (n) {
-        if (predicate(n)) return n
-        n = n[next]
+        cb(n);
+        n = n[next];
       }
     },
-    findIdx(idx) {
-      let n = head
-      while (n && idx--) {
-        n = n[next]
+    walkBack: function(cb, start) {
+      n = start || tail;
+      while (n) {
+        cb(n);
+        n = n[prev];
       }
-      return n
     },
-    toArray() {
-      const arr = []
-      seek((n) => arr.push(n.v), head, 'next')
-      return arr
+    find: function(predicate) {
+      n = head;
+      if (+predicate < 0) {
+        while (n) {
+          if (predicate(n)) return n;
+          n = n[next];
+        }
+      } else {
+        while (n && predicate--) {
+          n = n[next];
+        }
+      }
+      return n;
     }
   }
 }
@@ -92,26 +88,39 @@ list.add(3)
 list.add(4)
 list.add(5)
 
-list.walk(console.log.bind(console), list.findIdx(3))
+list.toArray = () => {
+  arr = []
+  list.walk((n) => {
+    arr.push(n.v)
+  })
+  return arr
+}
+
+// console.log(list.toArray())
+
+// list.walk(console.log.bind(console), list.findIdx(3))
 
 console.log(list.length())
-list.remove(list.findIdx(1))
+console.log(list.find(1))
+list.remove(list.find(1))
 console.log(list.length())
+// //
+console.log(list.toArray())
 //
-// console.log(list.toArray())
+list.remove()
 //
-// list.remove()
+console.log(list.toArray())
 //
-// console.log(list.toArray())
+list.remove()
 //
-// list.remove()
+console.log(list.toArray())
 //
-// console.log(list.toArray())
-//
-// list.remove()
-// list.remove()
-// list.remove()
-// list.remove()
-// list.remove()
-//
-// console.log(list.toArray())
+list.remove()
+list.remove()
+list.remove()
+list.remove()
+list.remove()
+
+console.log(list.toArray())
+
+console.log(+1 > 0)
