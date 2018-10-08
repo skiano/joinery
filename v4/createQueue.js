@@ -6,9 +6,9 @@ module.exports = function createQueue() {
   return {
     enqueue: (value) => {
       const node = { value };
-      if (!head) head = task;
-      if (tail) tail.next = task;
-      tail = task;
+      if (!head) head = node;
+      if (tail) tail.next = node;
+      tail = node;
       length += 1;
     },
     dequeue: () => {
@@ -22,7 +22,7 @@ module.exports = function createQueue() {
     length: () => {
       return length;
     },
-    peak: () => {
+    peek: () => {
       return head.value;
     },
     toArray: () => {

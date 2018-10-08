@@ -29,3 +29,5 @@ assert.equal(f[3].neighbors[0]().index(), 0);
 assert.equal(f[3].neighbors[1]().index(), 4);
 assert.equal(f[3].neighbors[2]().index(), 6);
 assert.equal(f[3].neighbors[3](), undefined);
+
+console.log('✓ create field');
