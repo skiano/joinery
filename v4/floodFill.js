@@ -21,7 +21,7 @@ module.exports = function floodFill(
   node.color = replacementColor;
   q.add(node);
 
-  while (q.length() && Infinity--) {
+  while (q.length()) {
     const n = q.remove();
 
     let neighbor;

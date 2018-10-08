@@ -1,28 +1,36 @@
 module.exports = function createCanvas(options) {
-  options = Object.assign({
-    width: 40,
-    height: 20,
-    background: '.',
-  }, options);
+  let width;
+  let height;
+  let background;
 
-  const { width, height, background } = options;
+  if (Array.isArray(options)) {
+    background = options;
+    width = options[0].length;
+    height = options.length;
+  } else {
+    background = options.background || '.';
+    width = options.width || 20;
+    height = options.height || 20;
+  }
+
   const area = width * height;
   const nodes = new Array(area);
 
   for (let i = 0; i < area; i += 1) {
     const p = i;
     const x = p % width;
+    const y = (p / width) >> 0;
 
     nodes[p] = {
-      color: background,
-      move: {
-        // TODO: add corners
-        north: () => nodes[p - width],
-        south: () => nodes[p + width],
-        east:  () => p + 1 < width ? nodes[p + 1] : undefined,
-        west:  () => x > 0 ? nodes[p - 1] : undefined
-      },
+      color: Array.isArray(background) ? background[y][x] : background,
+      neighbors: [
+        /* NORTH */ () => nodes[p - width],
+        /* EAST  */ () => p + 1 < width ? nodes[p + 1] : undefined,
+        /* SOUTH */ () => nodes[p + width],
+        /* West  */ () => x > 0 ? nodes[p - 1] : undefined
+      ],
       index: () => p,
+      coord: () => [x, y],
       next: () => nodes[p + 1],
       prev: () => nodes[p - 1],
     };
