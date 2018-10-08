@@ -26,24 +26,22 @@ assert.deepEqual(f[8].coord(), [2, 2]);
 // 3 4 5
 // 6 7 8
 
-assert.equal(f[0].neighbors[0](), undefined);
-assert.equal(f[0].neighbors[1]().index(), 1);
-assert.equal(f[0].neighbors[2]().index(), 3);
-assert.equal(f[0].neighbors[3](), undefined);
+const collectNeighborIdxs = (node) => {
+  return node.neighbors.map(n => n() && n().index());
+};
 
-assert.equal(f[1].neighbors[0](), undefined);
-assert.equal(f[1].neighbors[1]().index(), 2);
-assert.equal(f[1].neighbors[2]().index(), 4);
-assert.equal(f[1].neighbors[3]().index(), 0);
+const u = undefined;
 
-assert.equal(f[2].neighbors[0](), undefined);
-assert.equal(f[2].neighbors[1](), undefined);
-assert.equal(f[2].neighbors[2]().index(), 5);
-assert.equal(f[2].neighbors[3]().index(), 1);
+assert.deepEqual(collectNeighborIdxs(f[0]), [u, 1, 3, u]);
+assert.deepEqual(collectNeighborIdxs(f[1]), [u, 2, 4, 0]);
+assert.deepEqual(collectNeighborIdxs(f[2]), [u, u, 5, 1]);
 
-assert.equal(f[3].neighbors[0]().index(), 0);
-assert.equal(f[3].neighbors[1]().index(), 4);
-assert.equal(f[3].neighbors[2]().index(), 6);
-assert.equal(f[3].neighbors[3](), undefined);
+assert.deepEqual(collectNeighborIdxs(f[3]), [0, 4, 6, u]);
+assert.deepEqual(collectNeighborIdxs(f[4]), [1, 5, 7, 3]);
+assert.deepEqual(collectNeighborIdxs(f[5]), [2, u, 8, 4]);
+
+assert.deepEqual(collectNeighborIdxs(f[6]), [3, 7, u, u]);
+assert.deepEqual(collectNeighborIdxs(f[7]), [4, 8, u, 6]);
+assert.deepEqual(collectNeighborIdxs(f[8]), [5, u, u, 7]);
 
 console.log('✓ create field');
