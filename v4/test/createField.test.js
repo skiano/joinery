@@ -78,4 +78,16 @@ while (n && max--) {
 
 assert.equal(s, '876543210');
 
+//////////////////////////////////
+// TESTING CREATE FROM 2D ARRAY //
+//////////////////////////////////
+
+const f2 = createField([
+  ['A', 'B', 'C'],
+  ['D', 'E', 'F'],
+  ['G', 'H', 'I'],
+]);
+
+assert.equal(f2.toString(), 'ABC\nDEF\nGHI');
+
 console.log('✓ create field');
