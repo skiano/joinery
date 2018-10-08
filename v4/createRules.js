@@ -10,8 +10,6 @@ module.exports = function createRules(templates) {
 
   const colors = Object.keys(rules);
 
-  console.log(rules);
-
   return {
     getColors: () => colors,
     isValidColor: (node, proposedColor, background = '.') => {
@@ -23,8 +21,6 @@ module.exports = function createRules(templates) {
           ? neighbor.color
           : constants.VOID
           ;
-
-        console.log(neighborColor, rules[proposedColor][direction][neighborColor])
 
         return neighborColor === background
           ? true

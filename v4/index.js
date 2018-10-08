@@ -20,3 +20,4 @@ const field = createField();
 // console.log('' + field);
 
 console.log(rules.isValidColor(field[0], 'F'))
+console.log(rules.isValidColor(field[30], 'F'))
