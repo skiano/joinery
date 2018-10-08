@@ -6,6 +6,10 @@ const f = createField({
   height: 3,
 });
 
+/////////////////////////
+// TESTING COORDINATES //
+/////////////////////////
+
 // 0 1 2
 // 3 4 5
 // 6 7 8
@@ -21,6 +25,10 @@ assert.deepEqual(f[5].coord(), [2, 1]);
 assert.deepEqual(f[6].coord(), [0, 2]);
 assert.deepEqual(f[7].coord(), [1, 2]);
 assert.deepEqual(f[8].coord(), [2, 2]);
+
+///////////////////////
+// TESTING NEIGHBORS //
+///////////////////////
 
 // 0 1 2
 // 3 4 5
@@ -43,5 +51,31 @@ assert.deepEqual(collectNeighborIdxs(f[5]), [2, u, 8, 4]);
 assert.deepEqual(collectNeighborIdxs(f[6]), [3, 7, u, u]);
 assert.deepEqual(collectNeighborIdxs(f[7]), [4, 8, u, 6]);
 assert.deepEqual(collectNeighborIdxs(f[8]), [5, u, u, 7]);
+
+///////////////////////
+// TESTING NEXT/PREV //
+///////////////////////
+
+let max = f.length + 10;
+let n = f[0];
+let s = '';
+
+while (n && max--) {
+  s += n.index();
+  n = n.next();
+}
+
+assert.equal(s, '012345678');
+
+max = f.length + 10;
+n = f[8];
+s = '';
+
+while (n && max--) {
+  s += n.index();
+  n = n.prev();
+}
+
+assert.equal(s, '876543210');
 
 console.log('✓ create field');
