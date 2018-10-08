@@ -4,7 +4,6 @@ module.exports = function floodFill(
   field,
   targetColor,
   replacementColor,
-  maxIterations = Infinity
 ) {
   if (targetColor === replacementColor) return;
 
