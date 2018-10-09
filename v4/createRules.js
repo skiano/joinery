@@ -3,10 +3,7 @@ const constants = require('./constants');
 const createColorMap = require('./createColorMap');
 
 module.exports = function createRules(templates) {
-  const rules = Array.isArray(templates)
-    ? deepmerge.all(templates.map(createColorMap))
-    : createColorMap(templates)
-    ;
+  const rules = createColorMap(templates);
 
   const colors = Object.keys(rules);
 

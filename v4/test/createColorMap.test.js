@@ -7,7 +7,7 @@ assert.notEqual(VOID, undefined);
 const map1 = createColorMap(`
   AB
   BA
-`)
+`);
 
 assert.deepEqual(map1, {
   A: [
@@ -28,7 +28,7 @@ const map2 = createColorMap(`
   ABA
   BFB
   BBB
-`)
+`);
 
 assert.deepEqual(map2, {
   A: [
@@ -47,6 +47,39 @@ assert.deepEqual(map2, {
     { B: true },
     { B: true },
     { B: true }
+  ]
+});
+
+
+const map3 = createColorMap([
+  `
+  AB
+  BA
+  `,
+  `
+  FA
+  AF
+  `
+]);
+
+assert.deepEqual(map3, {
+  A: [
+    { VOID: true, B: true, F: true },
+    { B: true, VOID: true, F: true },
+    { B: true, VOID: true, F: true },
+    { VOID: true, B: true, F: true }
+  ],
+  B: [
+    { VOID: true, A: true },
+    { VOID: true, A: true },
+    { A: true, VOID: true },
+    { A: true, VOID: true }
+  ],
+  F: [
+    { VOID: true, A: true },
+    { A: true, VOID: true },
+    { A: true, VOID: true },
+    { VOID: true, A: true }
   ]
 });
 
