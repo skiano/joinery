@@ -1,9 +1,10 @@
-const createQueue = require('./util/createQueue');
+const createQueue = require('./createQueue');
 
 module.exports = function floodFill(
   field,
   targetColor,
   replacementColor,
+  onFill
 ) {
   if (targetColor === replacementColor) return;
 
@@ -18,19 +19,22 @@ module.exports = function floodFill(
   const q = createQueue();
 
   node.color = replacementColor;
-  q.add(node);
+  q.enqueue(node);
+  if (onFill) onFill(node);
 
   while (q.length()) {
-    const n = q.remove();
+    const n = q.dequeue();
 
     let neighbor;
-    for (let d in n.move) {
-      neighbor = n.move[d]();
+
+    n.neighbors.forEach((getNeighbor) => {
+      neighbor = getNeighbor();
       if (neighbor && (neighbor.color === targetColor)) {
         neighbor.color = replacementColor;
-        q.add(neighbor);
+        q.enqueue(neighbor);
+        if (onFill) onFill(neighbor);
       }
-    }
+    });
   }
 
   return;

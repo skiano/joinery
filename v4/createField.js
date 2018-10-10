@@ -46,5 +46,7 @@ module.exports = function createCanvas(options = {}) {
     return str.trim();
   }
 
+  nodes.area = () => area;
+
   return nodes;
 }

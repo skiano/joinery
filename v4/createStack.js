@@ -19,7 +19,7 @@ module.exports = function createStack() {
       return length;
     },
     peek: () => {
-      return top.value;
+      return top && top.value;
     },
     toArray: () => {
       const arr = [];

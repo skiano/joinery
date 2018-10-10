@@ -1,7 +1,7 @@
 module.exports = function createQueue() {
   let head;
   let tail;
-  let length;
+  let length = 0;
 
   return {
     enqueue: (value) => {
@@ -23,7 +23,10 @@ module.exports = function createQueue() {
       return length;
     },
     peek: () => {
-      return head.value;
+      return head && head.value;
+    },
+    head: () => {
+      return head;
     },
     toArray: () => {
       const arr = [];

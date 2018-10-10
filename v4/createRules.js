@@ -8,21 +8,25 @@ module.exports = function createRules(templates) {
   const colors = Object.keys(rules);
 
   return {
-    getColors: () => colors,
+    getColors: () => colors.slice(),
     isValidColor: (node, proposedColor, background = '.') => {
+      if (typeof proposedColor === 'undefined') return false;
       if (!rules[proposedColor]) return true;
+
+      // a neighborColor must be void background or in the rule set
 
       return node.neighbors.every((getNeighbor, direction) => {
         const neighbor = getNeighbor();
-        const neighborColor = neighbor
-          ? neighbor.color
-          : constants.VOID
-          ;
 
-        return neighborColor === background
-          ? true
-          : !!rules[proposedColor][direction][neighborColor]
-          ;
+        let neighborColor = neighbor && neighbor.color;
+
+        if (neighborColor === background) return true
+
+        if (!rules[neighborColor]) {
+          neighborColor = constants.VOID;
+        }
+
+        return !!rules[proposedColor][direction][neighborColor];
       });
     }
   };
