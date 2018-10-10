@@ -41,7 +41,10 @@ module.exports = function createCanvas(options = {}) {
     for (let i = 0; i < nodes.length; i += 1) {
       const x = i % width;
       if (x === 0) str += '\n';
-      str += nodes[i].color;
+      str += nodes[i].color === background
+        ? ' '
+        : nodes[i].color
+        ;
     }
     return str.trim();
   }
